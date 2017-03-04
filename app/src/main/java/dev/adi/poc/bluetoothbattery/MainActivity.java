@@ -181,6 +181,15 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(batteryInfoReceiver);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 0) {
+            showToast("Bluetooth : Not Enabled");
+        } else {
+            setupBluetooth();
+        }
+    }
+
     public void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
