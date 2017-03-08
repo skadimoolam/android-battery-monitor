@@ -7,15 +7,31 @@
     android:padding="8dp"
     tools:context="dev.adi.poc.bluetoothbattery.MainActivity">
 
-    <TextView
-        android:id="@+id/tv_batt_percentage"
-        android:layout_centerInParent="true"
-        android:textSize="50dp"
-        android:text="0%"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_batt_status"
+            android:textSize="20dp"
+            android:text="STATUS : Unknown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_batt_percentage"
+            android:textSize="50dp"
+            android:text="0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <Button
+        android:id="@+id/btn_set_device"
         android:layout_alignParentBottom="true"
         android:onClick="setDefaultDevice"
         android:text="Select Device"
@@ -23,3 +39,25 @@
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
+<!--
+        <TextView
+            android:id="@+id/tv_blue_connected"
+            android:textSize="20dp"
+            android:text="CONNECTED : Unknown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" /> -->
+<!-- <Button
+    android:layout_above="@+id/btn_send_1"
+    android:id="@+id/btn_send_0"
+    android:onClick="sendData"
+    android:text="Send 0"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+<Button
+    android:layout_above="@+id/btn_set_device"
+    android:id="@+id/btn_send_1"
+    android:onClick="sendData"
+    android:text="Send 1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" /> -->
