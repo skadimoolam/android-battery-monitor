@@ -66,12 +66,15 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                    mSmoothBluetooth.disconnect();
+                    mSmoothBluetooth.stop();
                     setBattStatus("Discharging");
                     break;
             }
         }
     };
 
+    BluetoothAdapter mBluetoothAdapter;
     private SmoothBluetooth mSmoothBluetooth;
     SmoothBluetooth.ConnectionCallback connectionCallback;
     private SmoothBluetooth.Listener mBluetoothListener = new SmoothBluetooth.Listener() {
@@ -95,18 +98,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onConnected(Device device) {
             // setBlueConnected(device.getName());
-            // showToast("Bluetooth : Conneted to " + device.getName());
+            showToast("Bluetooth : Conneted to " + device.getName());
         }
 
         @Override
         public void onDisconnected() {
             // setBlueConnected("disconnected");
-            // showToast("Bluetooth : Disconnect");
+            showToast("Bluetooth : Disconnect");
         }
 
         @Override
         public void onConnectionFailed(Device device) {
-
+            showToast("Bluetooth : Could not connect, try again");
         }
 
         @Override
@@ -130,10 +133,10 @@ public class MainActivity extends AppCompatActivity {
             pairedDevicesList = deviceList;
 
             if (preferences.getString(SELECTED_DEVICE_ADDRESS, "testing") == "testing") {
-                selectDefaultDevice(pairedDevicesList, connectionCallback);
+                selectDefaultDevice(pairedDevicesList, connectionCallback, true);
             } else {
                 for(int i = 0; i < deviceList.size(); ++i){
-                    if (deviceList.get(i).getAddress() == preferences.getString(SELECTED_DEVICE_ADDRESS, "sample")) {
+                    if (deviceList.get(i).getAddress().contains(preferences.getString(SELECTED_DEVICE_ADDRESS, "sample"))) {
                         connectionCallback.connectTo(deviceList.get(i));
                     }
                 }
@@ -159,11 +162,12 @@ public class MainActivity extends AppCompatActivity {
             showToast("Please select a device");
         }
 
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mSmoothBluetooth = new SmoothBluetooth(this, SmoothBluetooth.ConnectionTo.OTHER_DEVICE, SmoothBluetooth.Connection.INSECURE, mBluetoothListener);
         mSmoothBluetooth.tryConnection();
     }
 
-    public void selectDefaultDevice(final List<Device> deviceList, final SmoothBluetooth.ConnectionCallback cCallback) {
+    public void selectDefaultDevice(final List<Device> deviceList, final SmoothBluetooth.ConnectionCallback cCallback, boolean exec) {
         List<String> pairedDevicesNames = new ArrayList<>();
 
         if (deviceList.size() > 0) {
@@ -233,6 +237,16 @@ public class MainActivity extends AppCompatActivity {
     // }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 0) {
+            showToast("Bluetooth : Not Enabled");
+        } else {
+            mSmoothBluetooth = new SmoothBluetooth(this, SmoothBluetooth.ConnectionTo.OTHER_DEVICE, SmoothBluetooth.Connection.INSECURE, mBluetoothListener);
+            mSmoothBluetooth.tryConnection();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(batteryInfoReceiver);
@@ -244,6 +258,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setDefaultDevice(View view) {
-        selectDefaultDevice(pairedDevicesList, connectionCallback);
+        selectDefaultDevice(pairedDevicesList, connectionCallback, false);
     }
 }
