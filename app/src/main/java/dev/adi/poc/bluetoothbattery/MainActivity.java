@@ -2,35 +2,23 @@ package dev.adi.poc.bluetoothbattery;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.DataSetObserver;
 import android.os.BatteryManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.graphics.Color;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import io.palaima.smoothbluetooth.Device;
 import io.palaima.smoothbluetooth.SmoothBluetooth;
@@ -45,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor prefEditor;
     SharedPreferences preferences;
 
-    private BluetoothAdapter bluetoothAdapter;
     private List<Device> pairedDevicesList = new ArrayList<>();
 
     BroadcastReceiver batteryInfoReceiver = new BroadcastReceiver() {
@@ -69,15 +56,16 @@ public class MainActivity extends AppCompatActivity {
                     mSmoothBluetooth.disconnect();
                     mSmoothBluetooth.stop();
                     setBattStatus("Discharging");
+                    if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
                     break;
             }
         }
     };
 
     BluetoothAdapter mBluetoothAdapter;
-    private SmoothBluetooth mSmoothBluetooth;
+    SmoothBluetooth mSmoothBluetooth;
     SmoothBluetooth.ConnectionCallback connectionCallback;
-    private SmoothBluetooth.Listener mBluetoothListener = new SmoothBluetooth.Listener() {
+    SmoothBluetooth.Listener mBluetoothListener = new SmoothBluetooth.Listener() {
         @Override
         public void onBluetoothNotSupported() {
             showToast("Bluetooth : Not Supported");
@@ -132,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             connectionCallback = cCallback;
             pairedDevicesList = deviceList;
 
-            if (preferences.getString(SELECTED_DEVICE_ADDRESS, "testing") == "testing") {
+            if (preferences.getString(SELECTED_DEVICE_ADDRESS, "testing").equals("testing")) {
                 selectDefaultDevice(pairedDevicesList, connectionCallback, true);
             } else {
                 for(int i = 0; i < deviceList.size(); ++i){
@@ -150,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         registerReceiver(batteryInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -158,11 +146,11 @@ public class MainActivity extends AppCompatActivity {
         preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         prefEditor = preferences.edit();
 
-        if (preferences.getString(SELECTED_DEVICE_ADDRESS, "testing") == "testing") {
+        if (preferences.getString(SELECTED_DEVICE_ADDRESS, "testing").equals("testing")) {
             showToast("Please select a device");
         }
 
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mSmoothBluetooth = new SmoothBluetooth(this, SmoothBluetooth.ConnectionTo.OTHER_DEVICE, SmoothBluetooth.Connection.INSECURE, mBluetoothListener);
         mSmoothBluetooth.tryConnection();
     }
@@ -206,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-
     public void setBattPercentage(int battPercentage) {
         TextView tvBattPercent = (TextView) findViewById(R.id.tv_batt_percentage);
         tvBattPercent.setText(battPercentage + "%");
@@ -217,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout parent = (RelativeLayout) findViewById(R.id.activity_main);
         tvBattPercent.setText("STATUS : " + batStatus);
 
-        if (batStatus == "Full") {
+        if (batStatus.equals("Full")) {
             parent.setBackgroundColor(Color.parseColor("#b4eeb4"));
-        } else if (batStatus == "Charging") {
+        } else if (batStatus.equals("Charging")) {
             parent.setBackgroundColor(Color.parseColor("#b0e0e6"));
         } else {
             parent.setBackgroundColor(Color.parseColor("#ff525e"));
