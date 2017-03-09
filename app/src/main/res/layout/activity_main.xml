@@ -16,15 +16,22 @@
 
         <TextView
             android:id="@+id/tv_batt_status"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:text="STATUS : Unknown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_batt_percentage"
-            android:textSize="50dp"
+            android:textSize="30dp"
             android:text="0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_blue_connected"
+            android:textSize="15dp"
+            android:text="CONNECTED : Unknown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -39,13 +46,7 @@
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
-<!--
-        <TextView
-            android:id="@+id/tv_blue_connected"
-            android:textSize="20dp"
-            android:text="CONNECTED : Unknown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" /> -->
+
 <!-- <Button
     android:layout_above="@+id/btn_send_1"
     android:id="@+id/btn_send_0"

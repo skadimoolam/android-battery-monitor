@@ -85,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onConnected(Device device) {
-            // setBlueConnected(device.getName());
+            setBlueConnected(device.getName());
             showToast("Bluetooth : Conneted to " + device.getName());
         }
 
         @Override
         public void onDisconnected() {
-            // setBlueConnected("disconnected");
+            setBlueConnected("disconnected");
             showToast("Bluetooth : Disconnect");
         }
 
@@ -213,15 +213,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // public void setBlueConnected(String connectedTo) {
-    //     TextView tvConnectedTo = (TextView) findViewById(R.id.tv_blue_connected);
+     public void setBlueConnected(String connectedTo) {
+         TextView tvConnectedTo = (TextView) findViewById(R.id.tv_blue_connected);
 
-    //     if (connectedTo == "disconnected") {
-    //         tvConnectedTo.setText("Bluetooth : Disconnected");
-    //     } else {
-    //         tvConnectedTo.setText("Connected : " + connectedTo);
-    //     }
-    // }
+         if (connectedTo == "disconnected") {
+             tvConnectedTo.setText("Bluetooth : Disconnected");
+         } else {
+             tvConnectedTo.setText("ConnectedTo : " + connectedTo);
+         }
+     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
