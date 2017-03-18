@@ -53,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case BatteryManager.BATTERY_STATUS_DISCHARGING:
-                    mSmoothBluetooth.disconnect();
-                    mSmoothBluetooth.stop();
                     setBattStatus("Discharging");
-                    if (mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
+                    if (mBluetoothAdapter.isEnabled()) {
+                        mBluetoothAdapter.disable();
+                        mSmoothBluetooth.disconnect();
+                        mSmoothBluetooth.stop();
+                    }
                     break;
             }
         }
